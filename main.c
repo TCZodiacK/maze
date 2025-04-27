@@ -58,13 +58,13 @@ int main(void) {
     struct data player;
 
     while (menuchoice != 5) {
-        printf("Welcome to Maze\n");
-        printf("1. New Game\n");
-        printf("2. Continue\n");
-        printf("3. Import Custom Map\n");
-        printf("4. Play Custom Map\n");
-        printf("5. Exit\n");
-        printf("Enter your choice: ");
+        printf("\t\t\t\t\t    \033[33mMain Menu\n\n");
+        printf("\t\t\t\t\t  1. New Game\n");
+        printf("\t\t\t\t\t  2. Continue\n");
+        printf("\t\t\t\t\t  3. Import Custom Map\n");
+        printf("\t\t\t\t\t  4. Play Custom Map\n");
+        printf("\t\t\t\t\t  5. Exit\n\n");
+        printf("\t\t\t\t\t  Enter your choice: \033[0m");
         scanf("%d", &menuchoice);
         switch (menuchoice) {
             case 1:
