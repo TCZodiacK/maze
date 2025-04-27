@@ -65,7 +65,6 @@ int main(void) {
     int savelocated = getsavedata(&player);
 
     while (menuchoice != 6) {
-        /*printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");*/
         printf("\t\t\t\t\t    \033[33mMain Menu\n\n");
         printf("\t\t\t\t\t  1. New Game\n");
         printf("\t\t\t\t\t  2. Continue\n");
