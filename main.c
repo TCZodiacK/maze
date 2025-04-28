@@ -1,11 +1,11 @@
 //BSCS 1B
 /*
- *Game Designers
- *Aaron Beard
- *Chris Justin Taer
- *Rens Layco Moreno
- *Cloud Daet
- *John Andrew Lonceras
+ [DEVELOPERS]
+ Aaron Beard
+ Chris Justin Taer
+ Rens Layco Moreno
+ Cloud Sedgwick Daet
+ John Andrew Lonceras
  */
 #include <stdio.h>
 
