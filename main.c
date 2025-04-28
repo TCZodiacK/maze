@@ -9,6 +9,7 @@
  */
 #include <stdio.h>
 
+
 #define MAXROWS 22
 #define MAXCOLS 22
 #define MAXLEVEL 5
