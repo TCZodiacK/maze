@@ -118,13 +118,12 @@ int main(void) {
 				printf("\t\t\t\t\t---------------\n");
 				
 				printf("\n\t\t\t\t\t  CREDITS\n");
-                
-                printf("\t\t\t\t\t  [Role]:\n");
-                printf("\t\t\t\t\t  [Name Here]\n");
-                
-                printf("\n");
-                printf("\t\t\t\t\t---------------\n");
-                printf("\n");
+				printf("\t\t\t\t\t  [Role]:\n");
+				printf("\t\t\t\t\t  [Name Here]\n");
+				
+				printf("\n");
+				printf("\t\t\t\t\t---------------\n");
+				printf("\n");
             break;
 			
             case 7:
