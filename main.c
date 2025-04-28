@@ -75,7 +75,8 @@ int main(void) {
         printf("\t\t\t\t\t  3. Play Custom Map\n");
         printf("\t\t\t\t\t  4. Custom Map Upload Instructions\n");
         printf("\t\t\t\t\t  5. View Player Data\n");
-        printf("\t\t\t\t\t  6. Exit\n\n");
+        printf("\t\t\t\t\t  5. Credits\n");
+        printf("\t\t\t\t\t  7. Exit\n\n");
         printf("\t\t\t\t\t  Enter your choice: \033[0m");
         scanf("%d", &menuchoice);
         switch (menuchoice) {
@@ -105,15 +106,22 @@ int main(void) {
             case 4:
                 custominstructions();
             break;
-
+            
             case 5:
+            	printf("\n\t\t\t\t\t  [DEVELOPERS]\n");
+            	printf("\t\t\t\t\t  [role here]\n");
+            	printf("\t\t\t\t\t  [name here]\n");
+            	printf("\n");
+			break;
+
+            case 6:
                 printf("Name: %s\n", player.name);
             printf("Levels beaten: %d/%d\n", player.level - 1, MAXLEVEL);
             printf("Deaths: %d\n", player.deaths);
             printf("Total Moves Taken: %d\n", player.moves);
             break;
 
-            case 6:
+            case 7:
                 printf("Thank you for playing!\n");
             break;
 
