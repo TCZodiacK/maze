@@ -108,16 +108,16 @@ int main(void) {
 			
             case 5:
                 printf("Name: %s\n", player.name);
-            printf("Levels beaten: %d/%d\n", player.level - 1, MAXLEVEL);
-            printf("Deaths: %d\n", player.deaths);
-            printf("Total Moves Taken: %d\n", player.moves);
+				printf("Levels beaten: %d/%d\n", player.level - 1, MAXLEVEL);
+				printf("Deaths: %d\n", player.deaths);
+				printf("Total Moves Taken: %d\n", player.moves);
             break;
 			
 			case 6:
 				printf("\n");
 				printf("\t\t\t\t\t---------------\n");
 				
-                printf("\n\t\t\t\t\t  CREDITS\n");
+				printf("\n\t\t\t\t\t  CREDITS\n");
                 
                 printf("\t\t\t\t\t  [Role]:\n");
                 printf("\t\t\t\t\t  [Name Here]\n");
