@@ -269,6 +269,11 @@ void startgame(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2
             printf("\n\nYou have already beat the game\n");
             printf("If you want to choose a level to play, enter 1. If you wish to go back to the main menu, enter 0: ");
             scanf("%d", &playing);
+            while (playing > 1){
+                printf("Invalid Choice\n");
+                printf("If you want to choose a level to play, enter 1. If you wish to go back to the main menu, enter 0: ");
+                scanf("%d", &playing);
+            }
             if (playing == 1) {
                 int choice = 0;
                 printf("Enter the level you wish to play: ");
