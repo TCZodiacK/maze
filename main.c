@@ -11,7 +11,7 @@
 
 #define MAXROWS 22
 #define MAXCOLS 22
-#define MAXLEVEL 1
+#define MAXLEVEL 5
 
 //this structure will save the relevant player data, and also keep track of variables that need to be passed between different functions
 struct data {
@@ -24,10 +24,11 @@ struct data {
     int targetrow;
     int targetcol;
     int keys;
+    int custom_map_found;
 };
 
 void display(int maze[MAXROWS][MAXCOLS], char key[], int key_color[], struct data player);
-int initialize(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2]);
+int initialize(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2], struct data *player);
 int getnewplayerdata(struct data *player);
 int getsavedata(struct data *player);
 int savedata(struct data player);
@@ -51,18 +52,20 @@ int main(void) {
      *6-ice
      *7-teleporter
     */
+
+    struct data player;
+    int savelocated = getsavedata(&player);
+    player.custom_map_found = 0;
+
     //ascii values to be displayed for each tile type
     char key[] = {' ', '#', '!', 'K', 'D', 'O', 'I', 'T'};
-    int key_color[] = {0, 7, 3, 3, 2, 1, 6, 5};
+    int key_color[] = {0, 7, 3, 2, 2, 1, 6, 5};
     //starting location of the player in each level. listed as row then column
     int playerstart[MAXLEVEL + 2][2];
     //layouts of the mazes, will be filled in by pulling info from a text file
     int maze[MAXLEVEL + 2][MAXROWS][MAXCOLS] = {0};
-    initialize (maze, playerstart);
+    initialize (maze, playerstart, &player);
     int menuchoice = -1;
-
-    struct data player;
-    int savelocated = getsavedata(&player);
 
     while (menuchoice != 6) {
         printf("\t\t\t\t\t    \033[33mMain Menu\n\n");
@@ -90,7 +93,12 @@ int main(void) {
             break;
 
             case 3:
-                printf("play custom maze\n");
+                if (player.custom_map_found == 1) {
+                    startgame(maze, playerstart, key, key_color, &player, 1);
+                }
+            else {
+                printf("No custom map found.\n");
+            }
             break;
 
             case 4:
@@ -99,7 +107,7 @@ int main(void) {
 
             case 5:
                 printf("Name: %s\n", player.name);
-            printf("Level: %d\n", player.level);
+            printf("Levels beaten: %d/%d\n", player.level - 1, MAXLEVEL);
             printf("Deaths: %d\n", player.deaths);
             printf("Total Moves Taken: %d\n", player.moves);
             break;
@@ -123,7 +131,7 @@ void display(int maze[MAXROWS][MAXCOLS], char key[], int key_color[], struct dat
     for (int i = 0; i < MAXROWS; i++) {
         if (maze[i][0] == 0) {
             printf("\n");
-            printf("\n\033[33mP\033[0m: Player, \033[3%dm%c\033[0m: Wall, \033[3%dm%c\033[0m: Goal, \033[3%dm%c\033[0m: Key, \033[3%dm%c\033[0m: Gate, \033[3%dm%c\033[0m: Pitfall, \033[3%dm%c\033[0m: Ice, \033[3%dm%c\033[0m: Teleporter\n", key_color[1], key[1], key_color[2], key[2], key_color[3], key[3], key_color[4], key[4], key_color[5], key[5], key_color[6], key[6], key_color[7], key[7]);
+            printf("\n\033[33mP\033[0m: Player, \033[3%dm%c\033[0m: Wall, \033[3%dm%c\033[0m: Goal, \033[3%dm%c\033[0m: Key, \033[3%dm%c\033[0m: Door, \033[3%dm%c\033[0m: Pitfall, \033[3%dm%c\033[0m: Ice, \033[3%dm%c\033[0m: Teleporter\n", key_color[1], key[1], key_color[2], key[2], key_color[3], key[3], key_color[4], key[4], key_color[5], key[5], key_color[6], key[6], key_color[7], key[7]);
             return;
         }
         for (int j = 0; j < MAXCOLS; j++) {
@@ -136,10 +144,10 @@ void display(int maze[MAXROWS][MAXCOLS], char key[], int key_color[], struct dat
         }
         printf("\n");
     }
-    printf("\n\033[33mP\033[0m: Player, \033[3%dm%c\033[0m: Wall, \033[3%dm%c\033[0m: Goal, \033[3%dm%c\033[0m: Key, \033[3%dm%c\033[0m: Gate, \033[3%dm%c\033[0m: Pitfall, \033[3%dm%c\033[0m: Ice, \033[3%dm%c\033[0m: Teleporter\n", key_color[1], key[1], key_color[2], key[2], key_color[3], key[3], key_color[4], key[4], key_color[5], key[5], key_color[6], key[6], key_color[7], key[7]);
+    printf("\n\033[33mP\033[0m: Player, \033[3%dm%c\033[0m: Wall, \033[3%dm%c\033[0m: Goal, \033[3%dm%c\033[0m: Key, \033[3%dm%c\033[0m: Door, \033[3%dm%c\033[0m: Pitfall, \033[3%dm%c\033[0m: Ice, \033[3%dm%c\033[0m: Teleporter\n", key_color[1], key[1], key_color[2], key[2], key_color[3], key[3], key_color[4], key[4], key_color[5], key[5], key_color[6], key[6], key_color[7], key[7]);
 }
 
-int initialize(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2]) {
+int initialize(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2], struct data *player) {
     //this function should read the maze.txt file to get the data for all the levels in the game, and save that data in the appropriate arrays
 
     int rows, cols, i, j;
@@ -202,6 +210,7 @@ int initialize(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2
             maze[MAXLEVEL + 1][i][j] = 1;
         }
     }
+    player->custom_map_found = 1;
     fclose(custom_map);
     return 0;
 }
@@ -257,8 +266,8 @@ void startgame(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2
         }
 
         else if (player->level > MAXLEVEL) {
-            printf("You have already beat the game\n");
-            printf("If you want to choose a level to play, enter 1. If you wish to go back to the main menu, enter 0.\n");
+            printf("\n\nYou have already beat the game\n");
+            printf("If you want to choose a level to play, enter 1. If you wish to go back to the main menu, enter 0: ");
             scanf("%d", &playing);
             if (playing == 1) {
                 int choice = 0;
@@ -280,7 +289,7 @@ void startgame(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2
             playlevel(maze[0], key, key_color, player, custom);
             savedata(*player);
         }
-        if (custom == 0) {
+        if (custom == 0 && playing == 1) {
             printf("Your current level: %d\nWould you like to keep playing?\nEnter 1 for yes, or 0 for no: ", player->level);
             scanf("%d", &playing);
         }
@@ -316,7 +325,7 @@ void playlevel(int maze[MAXROWS][MAXCOLS], char key[], int key_color[], struct d
     }
     switch (playing_level) {
         case 1:
-            printf("Congratulations! You beat the level!\n");
+            printf("\n\nCongratulations! You beat the level!\n");
         if (custom == 0) {
             player->level++;
         }
