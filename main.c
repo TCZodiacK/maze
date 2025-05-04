@@ -47,7 +47,7 @@ int main(void) {
      *1-wall
      *2-objective space
      *3-key
-     *4-gate
+     *4-door
      *5-spike trap/hole
      *6-ice
      *7-teleporter
@@ -456,28 +456,32 @@ int gamelogic(int maze[MAXROWS][MAXCOLS], int move, struct data *player) {
 }
 
 void custominstructions(int key_color[]) {
-    printf("\nYour custom map that you wish to play should be saved as a plaintext file named custom.txt within the game folder alongside the maze.txt and save.txt files\n\n");
-    printf("When the game launches, it will automatically import your custom map, so be sure to restart your game after you place the map file in the game folder\n\n");
-    printf("The text of your custom map file should begin with the number of rows and columns that your map will consist of. Note that the maximum number of rows is %d and the maximum number of columns is %d\n\n", MAXROWS - 2, MAXCOLS - 2);
-    printf("After the rows and columns, you need to next have the row and column that is the position of the player's starting location, with 1 being the topmost row and leftmost column.\n\n");
-    printf("The game will automatically surround your map with walls, so you don't need to worry about making a map where the player can accidentally walk out of bounds\n\n");
-    printf("After that all you need to have in the file are a list of numbers corresponding to the map you wish to make, using the following key:\n\n");
-    printf("0-Empty Space, 1-Wall, 2-Goal, 3-Key, 4-Gate, 5-Pitfall, 6-Ice, 7-Teleporter\n\n");
-    printf("Please separate all numbers that you enter in your document by a space, you may organize the map into a rectangle and have your data not all on one line for convenience\n\n");
-    printf("Do you wish to have an explanation of how each space works?\n");
+    printf("\nYour custom map should be saved as 'custom.txt'\n\n");
+    printf("The game will import your map automatically\n\n");
+    printf("To access your map, try to restart your game\n\n");
+    printf("The text should look like this rows(Max:%d) columns(Max:%d)\n\n", MAXROWS - 2, MAXCOLS - 2);
+    printf("Next put in the player's starting location within your own maze\n\n");
+    printf("Using your own rows and columns choose a space for it. 1 is the leftmost row and topmost column \n\n");
+    printf("NOTE: THE PLAYER'S STARTING POSITION MUST BE AN OPEN SPACE\n\n");
+    printf("Your first line should look like this. (20 20 1 1)\n\n");
+    printf("The game will automatically surround your map with walls. Go free with your imagination!\n\n");
+    printf("Using the following keys in the file will get you these tiles:\n\n");
+    printf("0-Empty Space, \033[3%dm1-Wall\033[0m, \033[3%dm2-Goal\033[0m, \033[3%dm3-Key\033[0m, \033[3%dm4-Door\033[0m, \033[3%dm5-Pitfall\033[0m, \033[3%dm6-Ice\033[0m, \033[3%dm7-Teleporter\033[0m\n\n", key_color[1], key_color[2], key_color[3], key_color[4], key_color[5], key_color[6], key_color[7]);
+    printf("Separate all your tiles with a space\n\n");
+    printf("TIP: Arrange your map into a square or rectangle\n");
+    printf("\nDo you wish to have an explanation of how each space works?\n");
     printf("Enter 1 for yes, enter 0 for no: ");
     int choice;
     scanf("%d", &choice);
-
     if (choice == 1) {
-        printf("\nEmpty space: The player can freely move into this space from any orthogonal adjacent space.\n");
-        printf("\033[3%dmWall: This space cannot be entered by the player.\n\033[0m", key_color[1]);
-        printf("\033[3%dmGoal: This is the space the player must move to in order to win the level.\n\033[0m", key_color[2]);
-        printf("\033[3%dmKey: If the player enters this space, they can pick up a key that can be consumed to open a gate.\n\033[0m", key_color[3]);
-        printf("\033[3%dmGate: This space represents a locked gate that cannot be traversed without using a key.\n\033[0m", key_color[4]);
-        printf("\033[3%dmPitfall: This space represents a trap that will cause the player to lose if they move into it.\n\033[0m", key_color[5]);
-        printf("\033[3%dmIce: If the player enters an ice space, they will continue to slide in the same direction until they end up entering another type of space.\n\033[0m", key_color[6]);
-        printf("\033[3%dmTeleporter: If the player enters a teleporter, the player will be moved to the other teleporter space.\nPlease note that all maps must have exactly 0 or 2 teleporters, or they will not work properly.\n\033[0m", key_color[7]);
+        printf("\nEmpty space(0): The player can freely move into this space from any orthogonal adjacent space\n");
+        printf("\033[3%dmWall(1): This space cannot be entered by the player\n\033[0m", key_color[1]);
+        printf("\033[3%dmGoal(2): This is the space the player must move to in order to win the level\n\033[0m", key_color[2]);
+        printf("\033[3%dmKey(3): If the player enters this space, they can pick up a key that can be consumed to open a door\n\033[0m", key_color[3]);
+        printf("\033[3%dmDoor(4): This space represents a locked door that cannot be opened without consuiming a key\n\033[0m", key_color[4]);
+        printf("\033[3%dmPitfall(5): This space represents a trap that will cause the player to lose if they move into it\n\033[0m", key_color[5]);
+        printf("\033[3%dmIce(6): If the player enters an ice space, they will continue to slide in the same direction until they end up entering another type of space\n\033[0m", key_color[6]);
+        printf("\033[3%dmTeleporter(7): If the player enters a teleporter, the player will be moved to the other teleporter space\n\033[0mPlease note that all maps must have exactly 0 or 2 teleporters, or they will not work properly\n", key_color[7]);
     }
     printf("\nWould you like to see an example of how to format your text file for your custom map?\n");
     printf("Enter 1 for yes, enter 0 for no: ");
@@ -489,6 +493,6 @@ void custominstructions(int key_color[]) {
         printf("0 0 0 0 1\n");
         printf("0 1 1 1 1\n");
         printf("0 0 0 0 2\n");
-        printf("\nIn the above example, the player would start in the empty space next to the key, and then be able to open the gate and proceed to the goal.\n");
+        printf("\nIn the above example, the player would start in the empty space next to the key, and then be able to open the door and proceed to the goal.\n");
     }
 }
