@@ -67,15 +67,16 @@ int main(void) {
     initialize (maze, playerstart, &player);
     int menuchoice = -1;
 
-    while (menuchoice != 6) {
-        printf("\t\t\t\t\t    \033[33mMain Menu\n\n");
+    while (menuchoice != 7) {
+        printf("\t\t\t\t\t     \033[33mMain Menu\n\n");
         printf("\t\t\t\t\t  1. New Game\n");
         printf("\t\t\t\t\t  2. Continue\n");
         printf("\t\t\t\t\t  3. Play Custom Map\n");
         printf("\t\t\t\t\t  4. Custom Map Upload Instructions\n");
         printf("\t\t\t\t\t  5. View Player Data\n");
-        printf("\t\t\t\t\t  6. Exit\n\n");
-        printf("\t\t\t\t\t  Enter your choice: \033[0m");
+        printf("\t\t\t\t\t  6. View Credits\n");
+        printf("\t\t\t\t\t  7. Exit\n\n");
+        printf("\t\t\t\t\t     Enter your choice: \033[0m");
         scanf("%d", &menuchoice);
         switch (menuchoice) {
             case 1:
@@ -113,6 +114,17 @@ int main(void) {
             break;
 
             case 6:
+            printf("\n\n");
+            printf("\t\t\t\t\t     ------------------------------------------------\n\n");
+            printf("\t\t\t\t\t     Aaron Beard: Design Lead\n\n");
+            printf("\t\t\t\t\t     Chris Justin Taer: Chief Level Designer\n\n");
+            printf("\t\t\t\t\t     Rens Layco Moreno: Project Manager\n\n");
+            printf("\t\t\t\t\t     Cloud Daet: Creative Design Director\n\n");
+            printf("\t\t\t\t\t     John Andrew Lonceras: Quality Control Specialist\n\n");
+            printf("\t\t\t\t\t     ------------------------------------------------\n\n");
+            break;
+
+            case 7:
                 printf("Thank you for playing!\n");
             break;
 
