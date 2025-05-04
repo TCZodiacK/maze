@@ -11,7 +11,7 @@
 
 #define MAXROWS 22
 #define MAXCOLS 22
-#define MAXLEVEL 5
+#define MAXLEVEL 6
 
 //this structure will save the relevant player data, and also keep track of variables that need to be passed between different functions
 struct data {
@@ -37,7 +37,7 @@ void preparelevel(int level, int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playersta
 void playlevel(int maze[MAXROWS][MAXCOLS], char key[], int key_color[], struct data *player, int custom);
 int getmove();
 int gamelogic(int maze[MAXROWS][MAXCOLS], int move, struct data *player);
-void custominstructions(void);
+void custominstructions(int key_color[]);
 
 
 int main(void) {
@@ -102,7 +102,7 @@ int main(void) {
             break;
 
             case 4:
-                custominstructions();
+                custominstructions(key_color);
             break;
 
             case 5:
@@ -269,7 +269,7 @@ void startgame(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2
             printf("\n\nYou have already beat the game\n");
             printf("If you want to choose a level to play, enter 1. If you wish to go back to the main menu, enter 0: ");
             scanf("%d", &playing);
-            if (playing == 1) {
+            if (playing) {
                 int choice = 0;
                 printf("Enter the level you wish to play: ");
                 scanf("%d", &choice);
@@ -289,8 +289,8 @@ void startgame(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2
             playlevel(maze[0], key, key_color, player, custom);
             savedata(*player);
         }
-        if (custom == 0 && playing == 1) {
-            printf("Your current level: %d\nWould you like to keep playing?\nEnter 1 for yes, or 0 for no: ", player->level);
+        if (custom == 0 && playing) {
+            printf("\n\nWould you like to keep playing?\nEnter 1 for yes, or 0 for no: ");
             scanf("%d", &playing);
         }
         else {
@@ -325,14 +325,18 @@ void playlevel(int maze[MAXROWS][MAXCOLS], char key[], int key_color[], struct d
     }
     switch (playing_level) {
         case 1:
+            display(maze, key, key_color, *player);
             printf("\n\nCongratulations! You beat the level!\n");
         if (custom == 0) {
-            player->level++;
+            if (player->level < MAXLEVEL + 1) {
+                player->level++;
+            }
         }
         return;
 
         case -1:
-            printf("You lost the level\n");
+            printf("\t\t\t\t\t    \033[31m You Died! \n");
+            printf("---------------|Player: %s |-------------|Level: %d |---------------|Deaths: %d |-----------------\033[0m\n", player->name, player->level, player->deaths);
         if (custom == 0) {
             player->deaths++;
         }
@@ -406,6 +410,8 @@ int gamelogic(int maze[MAXROWS][MAXCOLS], int move, struct data *player) {
         return 0;
 
         case 2:
+        player->row = player->targetrow;
+        player->col = player->targetcol;
         return 1;
 
         case 3:
@@ -430,8 +436,7 @@ int gamelogic(int maze[MAXROWS][MAXCOLS], int move, struct data *player) {
         case 6:
         player->row = player->targetrow;
         player->col = player->targetcol;
-        gamelogic(maze, move, player);
-        return 0;
+        return gamelogic(maze, move, player);
 
         case 7:
             for (int i = 0; i < MAXROWS; i++) {
@@ -449,34 +454,35 @@ int gamelogic(int maze[MAXROWS][MAXCOLS], int move, struct data *player) {
     }
 }
 
-void custominstructions(void) {
+void custominstructions(int key_color[]) {
     printf("\nYour custom map that you wish to play should be saved as a plaintext file named custom.txt within the game folder alongside the maze.txt and save.txt files\n\n");
     printf("When the game launches, it will automatically import your custom map, so be sure to restart your game after you place the map file in the game folder\n\n");
     printf("The text of your custom map file should begin with the number of rows and columns that your map will consist of. Note that the maximum number of rows is %d and the maximum number of columns is %d\n\n", MAXROWS - 2, MAXCOLS - 2);
     printf("After the rows and columns, you need to next have the row and column that is the position of the player's starting location, with 1 being the topmost row and leftmost column.\n\n");
     printf("The game will automatically surround your map with walls, so you don't need to worry about making a map where the player can accidentally walk out of bounds\n\n");
-    printf("After that all that you need to have in the file are a list of numbers corresponding to the map you wish to make, using the following key:\n\n");
-    printf("*0-Empty Space, 1-Wall, 2-Goal, 3-Key, 4-Gate, *5-Pitfall, 6-Ice, 7-Teleporter\n\n");
+    printf("After that all you need to have in the file are a list of numbers corresponding to the map you wish to make, using the following key:\n\n");
+    printf("0-Empty Space, 1-Wall, 2-Goal, 3-Key, 4-Gate, 5-Pitfall, 6-Ice, 7-Teleporter\n\n");
     printf("Please separate all numbers that you enter in your document by a space, you may organize the map into a rectangle and have your data not all on one line for convenience\n\n");
     printf("Do you wish to have an explanation of how each space works?\n");
     printf("Enter 1 for yes, enter 0 for no: ");
     int choice;
     scanf("%d", &choice);
+
     if (choice == 1) {
-        printf("Empty space: The player can freely move into this space from any orthogonal adjacent space.\n");
-        printf("Wall: This space cannot be entered by the player.\n");
-        printf("Goal: This is the space the player must move to in order to win the level.\n");
-        printf("Key: If the player enters this space, they can pick up a key that can be consumed to open a gate.\n");
-        printf("Gate: This space represents a locked gate that cannot be traversed without using a key.\n");
-        printf("Pitfall: This space represents a trap that will cause the player to lose if they move into it.\n");
-        printf("Ice: If the player enters an ice space, they will continue to slide in the same direction until they end up entering another type of space.\n");
-        printf("Teleporter: If the player enters a teleporter, the player will be moved to the other teleporter space.\nPlease note that all maps should have either 0 or 2 teleporters.\n");
+        printf("\nEmpty space: The player can freely move into this space from any orthogonal adjacent space.\n");
+        printf("\033[3%dmWall: This space cannot be entered by the player.\n\033[0m", key_color[1]);
+        printf("\033[3%dmGoal: This is the space the player must move to in order to win the level.\n\033[0m", key_color[2]);
+        printf("\033[3%dmKey: If the player enters this space, they can pick up a key that can be consumed to open a gate.\n\033[0m", key_color[3]);
+        printf("\033[3%dmGate: This space represents a locked gate that cannot be traversed without using a key.\n\033[0m", key_color[4]);
+        printf("\033[3%dmPitfall: This space represents a trap that will cause the player to lose if they move into it.\n\033[0m", key_color[5]);
+        printf("\033[3%dmIce: If the player enters an ice space, they will continue to slide in the same direction until they end up entering another type of space.\n\033[0m", key_color[6]);
+        printf("\033[3%dmTeleporter: If the player enters a teleporter, the player will be moved to the other teleporter space.\nPlease note that all maps must have exactly 0 or 2 teleporters, or they will not work properly.\n\033[0m", key_color[7]);
     }
     printf("\nWould you like to see an example of how to format your text file for your custom map?\n");
     printf("Enter 1 for yes, enter 0 for no: ");
     scanf("%d", &choice);
     if (choice == 1) {
-        printf("5 5 1 2\n");
+        printf("\n5 5 1 2\n");
         printf("1 0 3 4 1\n");
         printf("1 1 1 0 1\n");
         printf("0 0 0 0 1\n");
