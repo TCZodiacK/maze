@@ -34,7 +34,7 @@ int getsavedata(struct data *player);
 int savedata(struct data player);
 void startgame(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2], char key[], int key_color[], struct data *player, int custom);
 void preparelevel(int level, int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2], struct data *player);
-void playlevel(int maze[MAXROWS][MAXCOLS], char key[], int key_color[], struct data *player, int custom);
+void playlevel(int maze[MAXROWS][MAXCOLS], char key[], int key_color[], struct data *player, int custom, int levelplayed);
 int getmove();
 int gamelogic(int maze[MAXROWS][MAXCOLS], int move, struct data *player);
 void custominstructions(int key_color[]);
@@ -259,10 +259,11 @@ int savedata(struct data player) {
 void startgame(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2], char key[], int key_color[], struct data *player, int custom) {
     //this function is the function that will manage the player between levels and load appropriate levels
 
+    int levelchosen = 0;
     int playing = 1;
     while (playing) {
         if (custom) {
-            preparelevel(MAXLEVEL + 1, maze, playerstart, player);
+            levelchosen = MAXLEVEL + 1;
         }
 
         else if (player->level > MAXLEVEL) {
@@ -270,23 +271,22 @@ void startgame(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2
             printf("If you want to choose a level to play, enter 1. If you wish to go back to the main menu, enter 0: ");
             scanf("%d", &playing);
             if (playing) {
-                int choice = 0;
                 printf("Enter the level you wish to play: ");
-                scanf("%d", &choice);
-                while (choice < 1 || choice > MAXLEVEL) {
+                scanf("%d", &levelchosen);
+                while (levelchosen < 1 || levelchosen > MAXLEVEL) {
                     printf("Invalid Choice\n");
                     printf("Enter the level you wish to play: ");
-                    scanf("%d", &choice);
+                    scanf("%d", &levelchosen);
                 }
-                preparelevel(choice, maze, playerstart, player);
             }
         }
 
         else {
-            preparelevel(player->level, maze, playerstart, player);
+            levelchosen = player->level;
         }
         if (playing) {
-            playlevel(maze[0], key, key_color, player, custom);
+            preparelevel(levelchosen, maze, playerstart, player);
+            playlevel(maze[0], key, key_color, player, custom, levelchosen);
             savedata(*player);
         }
         if (custom == 0 && playing) {
@@ -312,7 +312,7 @@ void preparelevel(int level, int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playersta
     player->keys = 0;
 }
 
-void playlevel(int maze[MAXROWS][MAXCOLS], char key[], int key_color[], struct data *player, int custom) {
+void playlevel(int maze[MAXROWS][MAXCOLS], char key[], int key_color[], struct data *player, int custom, int levelplayed) {
     //this function will run through the turn by turn actions of the level itself, ie display screen, get player move, determine what happens, update player
     int playing_level = 0;
     while (!playing_level) {
@@ -326,7 +326,8 @@ void playlevel(int maze[MAXROWS][MAXCOLS], char key[], int key_color[], struct d
     switch (playing_level) {
         case 1:
             display(maze, key, key_color, *player);
-            printf("\n\nCongratulations! You beat the level!\n");
+        printf("\t\t\t\t\t    \033[33m You Won! \n");
+        printf("---------------|Player: %s |-------------|Level: %d |---------------|Deaths: %d |-----------------\033[0m\n", player->name, levelplayed, player->deaths);
         if (custom == 0) {
             if (player->level < MAXLEVEL + 1) {
                 player->level++;
@@ -335,11 +336,11 @@ void playlevel(int maze[MAXROWS][MAXCOLS], char key[], int key_color[], struct d
         return;
 
         case -1:
+            if (custom == 0) {
+                player->deaths++;
+            }
             printf("\t\t\t\t\t    \033[31m You Died! \n");
-            printf("---------------|Player: %s |-------------|Level: %d |---------------|Deaths: %d |-----------------\033[0m\n", player->name, player->level, player->deaths);
-        if (custom == 0) {
-            player->deaths++;
-        }
+            printf("---------------|Player: %s |-------------|Level: %d |---------------|Deaths: %d |-----------------\033[0m\n", player->name, levelplayed, player->deaths);
         return;
     }
 }
