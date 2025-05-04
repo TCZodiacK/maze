@@ -1,6 +1,6 @@
 //BSCS 1B
 /*
- *Game Designers
+ [DEVELOPERS]
  *Aaron Beard
  *Chris Justin Taer
  *Rens Layco Moreno
@@ -67,14 +67,15 @@ int main(void) {
     initialize (maze, playerstart, &player);
     int menuchoice = -1;
 
-    while (menuchoice != 6) {
+    while (menuchoice != 7) {
         printf("\t\t\t\t\t    \033[33mMain Menu\n\n");
         printf("\t\t\t\t\t  1. New Game\n");
         printf("\t\t\t\t\t  2. Continue\n");
         printf("\t\t\t\t\t  3. Play Custom Map\n");
         printf("\t\t\t\t\t  4. Custom Map Upload Instructions\n");
         printf("\t\t\t\t\t  5. View Player Data\n");
-        printf("\t\t\t\t\t  6. Exit\n\n");
+        printf("\t\t\t\t\t  6. View Credits\n");
+        printf("\t\t\t\t\t  7. Exit\n\n");
         printf("\t\t\t\t\t  Enter your choice: \033[0m");
         scanf("%d", &menuchoice);
         switch (menuchoice) {
@@ -104,15 +105,28 @@ int main(void) {
             case 4:
                 custominstructions(key_color);
             break;
-
+			
             case 5:
                 printf("Name: %s\n", player.name);
-            printf("Levels beaten: %d/%d\n", player.level - 1, MAXLEVEL);
-            printf("Deaths: %d\n", player.deaths);
-            printf("Total Moves Taken: %d\n", player.moves);
+				printf("Levels beaten: %d/%d\n", player.level - 1, MAXLEVEL);
+				printf("Deaths: %d\n", player.deaths);
+				printf("Total Moves Taken: %d\n", player.moves);
             break;
-
-            case 6:
+			
+			case 6:
+				printf("\n");
+				printf("\t\t\t\t\t---------------\n");
+				
+				printf("\n\t\t\t\t\t  CREDITS\n");
+				printf("\t\t\t\t\t  [Role]:\n");
+				printf("\t\t\t\t\t  [Name Here]\n");
+				
+				printf("\n");
+				printf("\t\t\t\t\t---------------\n");
+				printf("\n");
+            break;
+			
+            case 7:
                 printf("Thank you for playing!\n");
             break;
 
