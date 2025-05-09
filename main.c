@@ -242,7 +242,7 @@ int getsavedata(struct data *player) {
     //this function will get the saved data from a returning player
     FILE* ifp = fopen("save.txt", "r");
     if (ifp == NULL) {
-        printf("\033[31mError: Could not open save file.\n\033[0m");
+        printf("\033[31mNo save data found\n\033[0m");
         return -1;
     }
     fscanf(ifp, "%s", &player->name);
@@ -341,8 +341,8 @@ void playlevel(int maze[MAXROWS][MAXCOLS], char key[], int key_color[], struct d
     switch (playing_level) {
         case 1:
             display(maze, key, key_color, *player);
-        printf("\t\t\t\t\t    \033[33m You Won! \n");
-        printf("---------------|Player: %s |-------------|Level: %d |---------------|Deaths: %d |-----------------\033[0m\n", player->name, levelplayed, player->deaths);
+        printf("\n\t\t\t\t\t    \033[33m You Won! \n");
+        printf("\n---------------|Player: %s |-------------|Level: %d |---------------|Deaths: %d |-----------------\033[0m\n", player->name, levelplayed, player->deaths);
         if (custom == 0) {
             if (player->level < MAXLEVEL + 1) {
                 player->level++;
@@ -354,8 +354,8 @@ void playlevel(int maze[MAXROWS][MAXCOLS], char key[], int key_color[], struct d
             if (custom == 0) {
                 player->deaths++;
             }
-            printf("\t\t\t\t\t    \033[31m You Lost! \n");
-            printf("---------------|Player: %s |-------------|Level: %d |---------------|Deaths: %d |-----------------\033[0m\n", player->name, levelplayed, player->deaths);
+            printf("\n\t\t\t\t\t    \033[31m You Lost! \n");
+            printf("\n---------------|Player: %s |-------------|Level: %d |---------------|Deaths: %d |-----------------\033[0m\n", player->name, levelplayed, player->deaths);
         return;
     }
 }
