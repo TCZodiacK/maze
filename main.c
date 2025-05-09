@@ -11,7 +11,7 @@
 
 #define MAXROWS 22
 #define MAXCOLS 22
-#define MAXLEVEL 6
+#define MAXLEVEL 10
 
 //this structure will save the relevant player data, and also keep track of variables that need to be passed between different functions
 struct data {
