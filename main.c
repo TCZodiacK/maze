@@ -78,6 +78,7 @@ int main(void) {
         printf("\t\t\t\t\t  7. Exit\n\n");
         printf("\t\t\t\t\t     Enter your choice: \033[0m");
         scanf(" %c", &menuchoice);
+        printf("\n");
         switch (menuchoice) {
             case '1':
                 getnewplayerdata(&player);
@@ -115,13 +116,19 @@ int main(void) {
 
             case '6':
             printf("\n\n");
-            printf("\t\t\t\t\t     ------------------------------------------------\n\n");
-            printf("\t\t\t\t\t     Aaron Beard: Design Lead\n\n");
-            printf("\t\t\t\t\t     Chris Justin Taer: Visual Design Engineer\n\n");
-            printf("\t\t\t\t\t     Rens Layco Moreno: Project Manager\n\n");
-            printf("\t\t\t\t\t     Cloud Daet: Creative Design Director\n\n");
-            printf("\t\t\t\t\t     John Andrew Lonceras: Quality Control Specialist\n\n");
-            printf("\t\t\t\t\t     ------------------------------------------------\n\n");
+            printf("\t\t\t\t\t****************************************************\n");
+            printf("\t\t\t\t\t*                                                  *\n");
+            printf("\t\t\t\t\t* Aaron Beard: Design Lead                         *\n");
+            printf("\t\t\t\t\t*                                                  *\n");
+            printf("\t\t\t\t\t* Chris Justin Taer: Visual Design Engineer        *\n");
+            printf("\t\t\t\t\t*                                                  *\n");
+            printf("\t\t\t\t\t* Rens Layco Moreno: Project Manager               *\n");
+            printf("\t\t\t\t\t*                                                  *\n");
+            printf("\t\t\t\t\t* Cloud Daet: Creative Design Director             *\n");
+            printf("\t\t\t\t\t*                                                  *\n");
+            printf("\t\t\t\t\t* John Andrew Lonceras: Quality Control Specialist *\n");
+            printf("\t\t\t\t\t*                                                  *\n");
+            printf("\t\t\t\t\t****************************************************\n\n");
             break;
 
             case '7':
@@ -289,19 +296,15 @@ void startgame(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2
         }
 
         else if (player->level > MAXLEVEL) {
-            printf("\n\n\t\t\t\t\t\033[32mYou have already beat the game!\n\n\033[0m");
-            printf("If you want to choose a level to play, enter \033[32m1\033[0m. If you wish to go back to the main menu, enter \033[31m0\033[0m: ");
-            scanf(" %c", &playing);
-            if (playing == '1') {
-                printf("Enter the level you wish to play: ");
+            printf("\n\n\t\t\t\t\t\033[32mYou have already beaten the game!\n\033[0m");
+            printf("\n\t\t\t\t\tEnter the level you wish to play: ");
+            scanf(" %c", &levelinput);
+            levelchosen = levelinput - 48;
+            while (levelchosen < 1 || levelchosen > MAXLEVEL) {
+                printf("\n\t\t\t\t\t\033[31mInvalid Choice\n\033[0m");
+                printf("\n\t\t\t\t\tEnter the level you wish to play: ");
                 scanf(" %c", &levelinput);
                 levelchosen = levelinput - 48;
-                while (levelchosen < 1 || levelchosen > MAXLEVEL) {
-                    printf("\033[31mInvalid Choice\n\033[0m");
-                    printf("Enter the level you wish to play: ");
-                    scanf(" %c", &levelinput);
-                    levelchosen = levelinput - 48;
-                }
             }
         }
 
@@ -314,8 +317,9 @@ void startgame(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2
             savedata(*player);
         }
         if (custom == 0 && playing == '1') {
-            printf("\n\nWould you like to keep playing?\nEnter \033[32m1\033[0m for yes, or \033[31m0\033[0m for no: ");
+            printf("\n\n\t\t\t\t\tWould you like to keep playing?\n\t\t\t\t\tEnter \033[32m1\033[0m for yes, or \033[31m0\033[0m for no: ");
             scanf(" %c", &playing);
+            printf("\n");
         }
         else {
             playing = '0';
@@ -351,7 +355,7 @@ void playlevel(int maze[MAXROWS][MAXCOLS], char key[], int key_color[], struct d
         case 1:
             display(maze, key, key_color, *player);
         printf("\n\t\t\t\t\t    \033[33m You Won! \n");
-        printf("\n---------------|Player: %s |-------------|Level: %d |---------------|Deaths: %d |-----------------\033[0m\n\n", player->name, levelplayed, player->deaths);
+        printf("\n---------------| Player: %s |-------------| Level: %d |---------------| Deaths: %d |-----------------\033[0m\n\n", player->name, levelplayed, player->deaths);
         if (custom == 0) {
             if (player->level < MAXLEVEL + 1) {
                 player->level++;
@@ -364,7 +368,7 @@ void playlevel(int maze[MAXROWS][MAXCOLS], char key[], int key_color[], struct d
                 player->deaths++;
             }
             printf("\n\t\t\t\t\t    \033[31m You Lost! \n");
-            printf("\n---------------|Player: %s |-------------|Level: %d |---------------|Deaths: %d |-----------------\033[0m\n\n", player->name, levelplayed, player->deaths);
+            printf("\n---------------| Player: %s |-------------| Level: %d |---------------| Deaths: %d |-----------------\033[0m\n\n", player->name, levelplayed, player->deaths);
         return;
     }
 }
