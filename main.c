@@ -11,7 +11,7 @@
 
 #define MAXROWS 22
 #define MAXCOLS 22
-#define MAXLEVEL 10
+#define MAXLEVEL 9
 
 //this structure will save the relevant player data, and also keep track of variables that need to be passed between different functions
 struct data {
@@ -86,7 +86,7 @@ int main(void) {
 
             case '2':
                 if (savelocated == -1) {
-                    printf("No saved data found.\n");
+                    printf("\033[31mNo save data found\n\033[0m");
                 }
                 else {
                     startgame(maze, playerstart, key, key_color, &player, 0);
@@ -117,7 +117,7 @@ int main(void) {
             printf("\n\n");
             printf("\t\t\t\t\t     ------------------------------------------------\n\n");
             printf("\t\t\t\t\t     Aaron Beard: Design Lead\n\n");
-            printf("\t\t\t\t\t     Chris Justin Taer: Chief Level Designer\n\n");
+            printf("\t\t\t\t\t     Chris Justin Taer: Visual Design Engineer\n\n");
             printf("\t\t\t\t\t     Rens Layco Moreno: Project Manager\n\n");
             printf("\t\t\t\t\t     Cloud Daet: Creative Design Director\n\n");
             printf("\t\t\t\t\t     John Andrew Lonceras: Quality Control Specialist\n\n");
@@ -165,17 +165,22 @@ int initialize(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2
     int rows, cols, i, j;
     FILE* ifp = fopen("maze.txt", "r");
     if (ifp == NULL) {
-        printf("\033[31mError: Could not open file.\n\033[0m");
+        printf("\033[31mError: Could not open map file.\n\033[0m");
         return -1;
     }
     for (int layer = 1; layer <= MAXLEVEL; layer++) {
         if (fscanf(ifp, "%d %d %d %d", &rows, &cols, &playerstart[layer][0], &playerstart[layer][1]) != 4) {
-            printf("\033[31mError: Corrupted Data File\n\033[0m");
+            printf("\033[31mError: Corrupted Map File\n\033[0m");
             fclose(ifp);
             return -1;
         }
         if (rows > MAXROWS - 2 || cols > MAXCOLS - 2) {
-            printf("\033[31mError: Invalid Map Size\n\033[0m");
+            printf("\033[31mError: Corrupted Map File\n\033[0m");
+            fclose(ifp);
+            return -1;
+        }
+        if (playerstart[layer][0] < 1 || playerstart[layer][0] > rows || playerstart[layer][1] < 1 || playerstart[layer][1] > cols) {
+            printf("\033[31mError: Corrupted Map File\n\033[0m");
             fclose(ifp);
             return -1;
         }
@@ -203,6 +208,11 @@ int initialize(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2
         }
         if (rows > MAXROWS - 2 || cols > MAXCOLS - 2) {
             printf("\033[31mError: Invalid Custom Map Size\n\033[0m");
+            fclose(ifp);
+            return -1;
+        }
+        if (playerstart[MAXLEVEL + 1][0] < 1 || playerstart[MAXLEVEL + 1][0] > rows || playerstart[MAXLEVEL + 1][1] < 1 || playerstart[MAXLEVEL + 1][1] > cols) {
+            printf("\033[31mError: Invalid Custom Map Starting Location\n\033[0m");
             fclose(ifp);
             return -1;
         }
@@ -242,7 +252,6 @@ int getsavedata(struct data *player) {
     //this function will get the saved data from a returning player
     FILE* ifp = fopen("save.txt", "r");
     if (ifp == NULL) {
-        printf("\033[31mNo save data found\n\033[0m");
         return -1;
     }
     fscanf(ifp, "%s", &player->name);
@@ -342,7 +351,7 @@ void playlevel(int maze[MAXROWS][MAXCOLS], char key[], int key_color[], struct d
         case 1:
             display(maze, key, key_color, *player);
         printf("\n\t\t\t\t\t    \033[33m You Won! \n");
-        printf("\n---------------|Player: %s |-------------|Level: %d |---------------|Deaths: %d |-----------------\033[0m\n", player->name, levelplayed, player->deaths);
+        printf("\n---------------|Player: %s |-------------|Level: %d |---------------|Deaths: %d |-----------------\033[0m\n\n", player->name, levelplayed, player->deaths);
         if (custom == 0) {
             if (player->level < MAXLEVEL + 1) {
                 player->level++;
@@ -355,7 +364,7 @@ void playlevel(int maze[MAXROWS][MAXCOLS], char key[], int key_color[], struct d
                 player->deaths++;
             }
             printf("\n\t\t\t\t\t    \033[31m You Lost! \n");
-            printf("\n---------------|Player: %s |-------------|Level: %d |---------------|Deaths: %d |-----------------\033[0m\n", player->name, levelplayed, player->deaths);
+            printf("\n---------------|Player: %s |-------------|Level: %d |---------------|Deaths: %d |-----------------\033[0m\n\n", player->name, levelplayed, player->deaths);
         return;
     }
 }
