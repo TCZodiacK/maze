@@ -65,9 +65,9 @@ int main(void) {
     //layouts of the mazes, will be filled in by pulling info from a text file
     int maze[MAXLEVEL + 2][MAXROWS][MAXCOLS] = {0};
     initialize (maze, playerstart, &player);
-    int menuchoice = -1;
+    char menuchoice = '0';
 
-    while (menuchoice != 7) {
+    while (menuchoice != '7') {
         printf("\t\t\t\t\t     \033[33mMain Menu\n\n");
         printf("\t\t\t\t\t  1. New Game\n");
         printf("\t\t\t\t\t  2. Continue\n");
@@ -77,14 +77,14 @@ int main(void) {
         printf("\t\t\t\t\t  6. View Credits\n");
         printf("\t\t\t\t\t  7. Exit\n\n");
         printf("\t\t\t\t\t     Enter your choice: \033[0m");
-        scanf("%d", &menuchoice);
+        scanf(" %c", &menuchoice);
         switch (menuchoice) {
-            case 1:
+            case '1':
                 getnewplayerdata(&player);
                 startgame(maze, playerstart, key, key_color, &player, 0);
             break;
 
-            case 2:
+            case '2':
                 if (savelocated == -1) {
                     printf("No saved data found.\n");
                 }
@@ -93,7 +93,7 @@ int main(void) {
                 }
             break;
 
-            case 3:
+            case '3':
                 if (player.custom_map_found == 1) {
                     startgame(maze, playerstart, key, key_color, &player, 1);
                 }
@@ -102,18 +102,18 @@ int main(void) {
             }
             break;
 
-            case 4:
+            case '4':
                 custominstructions(key_color);
             break;
 
-            case 5:
-                printf("Name: %s\n", player.name);
-            printf("Levels beaten: %d/%d\n", player.level - 1, MAXLEVEL);
-            printf("Deaths: %d\n", player.deaths);
-            printf("Total Moves Taken: %d\n", player.moves);
+            case '5':
+                printf("\n\n\t\t\t\t\t Name: \033[32m%s\n\033[0m", player.name);
+            printf("\t\t\t\t\t Levels beaten: \033[35m%d/%d\n\033[0m", player.level - 1, MAXLEVEL);
+            printf("\t\t\t\t\t Deaths: \033[31m%d\n\033[0m", player.deaths);
+            printf("\t\t\t\t\t Total Moves Taken: \033[34m%d\n\n\n\033[0m", player.moves);
             break;
 
-            case 6:
+            case '6':
             printf("\n\n");
             printf("\t\t\t\t\t     ------------------------------------------------\n\n");
             printf("\t\t\t\t\t     Aaron Beard: Design Lead\n\n");
@@ -124,12 +124,12 @@ int main(void) {
             printf("\t\t\t\t\t     ------------------------------------------------\n\n");
             break;
 
-            case 7:
-                printf("Thank you for playing!\n");
+            case '7':
+                printf("\033[32mThank you for playing!\n\033[0m");
             break;
 
             default:
-                printf("Invalid choice\n");
+                printf("\n\033[31mInvalid choice\n\033[0m");
             break;
         }
     }
@@ -165,17 +165,17 @@ int initialize(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2
     int rows, cols, i, j;
     FILE* ifp = fopen("maze.txt", "r");
     if (ifp == NULL) {
-        printf("Error: Could not open file.\n");
+        printf("\033[31mError: Could not open file.\n\033[0m");
         return -1;
     }
     for (int layer = 1; layer <= MAXLEVEL; layer++) {
         if (fscanf(ifp, "%d %d %d %d", &rows, &cols, &playerstart[layer][0], &playerstart[layer][1]) != 4) {
-            printf("Error: Corrupted Data File\n");
+            printf("\033[31mError: Corrupted Data File\n\033[0m");
             fclose(ifp);
             return -1;
         }
         if (rows > MAXROWS - 2 || cols > MAXCOLS - 2) {
-            printf("Error: Invalid Map Size\n");
+            printf("\033[31mError: Invalid Map Size\n\033[0m");
             fclose(ifp);
             return -1;
         }
@@ -197,12 +197,12 @@ int initialize(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2
     FILE *custom_map = fopen("custom.txt", "r");
     if (custom_map != NULL) {
         if (fscanf(custom_map, "%d %d %d %d", &rows, &cols, &playerstart[MAXLEVEL + 1][0], &playerstart[MAXLEVEL + 1][1]) != 4) {
-            printf("Error: Improper Custom File Layout\n");
+            printf("\033[31mError: Improper Custom File Layout\n\033[0m");
             fclose(ifp);
             return -1;
         }
         if (rows > MAXROWS - 2 || cols > MAXCOLS - 2) {
-            printf("Error: Invalid Custom Map Size\n");
+            printf("\033[31mError: Invalid Custom Map Size\n\033[0m");
             fclose(ifp);
             return -1;
         }
@@ -213,7 +213,7 @@ int initialize(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2
             maze[MAXLEVEL + 1][i][0] = 1;
             for (j = 1; j <= cols; j++) {
                 if (fscanf(custom_map, "%d", &maze[MAXLEVEL + 1][i][j]) != 1) {
-                    printf("Error: Invalid Custom Map Data\n");
+                    printf("\033[31mError: Invalid Custom Map Data\n\033[0m");
                 }
             }
             maze[MAXLEVEL + 1][i][j] = 1;
@@ -229,7 +229,7 @@ int initialize(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2
 
 int getnewplayerdata(struct data *player) {
     //this function will get the new player data from the user
-    printf("Enter new your name: ");
+    printf("\033[32mEnter your name: \033[0m");
     scanf("%s", player->name);
     player->level = 1;
     player->deaths = 0;
@@ -242,7 +242,7 @@ int getsavedata(struct data *player) {
     //this function will get the saved data from a returning player
     FILE* ifp = fopen("save.txt", "r");
     if (ifp == NULL) {
-        printf("Error: Could not open save file.\n");
+        printf("\033[31mError: Could not open save file.\n\033[0m");
         return -1;
     }
     fscanf(ifp, "%s", &player->name);
@@ -272,23 +272,26 @@ void startgame(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2
     //this function is the function that will manage the player between levels and load appropriate levels
 
     int levelchosen = 0;
-    int playing = 1;
-    while (playing) {
+    char levelinput;
+    char playing = '1';
+    while (playing == '1') {
         if (custom) {
             levelchosen = MAXLEVEL + 1;
         }
 
         else if (player->level > MAXLEVEL) {
-            printf("\n\nYou have already beat the game\n");
-            printf("If you want to choose a level to play, enter 1. If you wish to go back to the main menu, enter 0: ");
-            scanf("%d", &playing);
-            if (playing) {
+            printf("\n\n\t\t\t\t\t\033[32mYou have already beat the game!\n\n\033[0m");
+            printf("If you want to choose a level to play, enter \033[32m1\033[0m. If you wish to go back to the main menu, enter \033[31m0\033[0m: ");
+            scanf(" %c", &playing);
+            if (playing == '1') {
                 printf("Enter the level you wish to play: ");
-                scanf("%d", &levelchosen);
+                scanf(" %c", &levelinput);
+                levelchosen = levelinput - 48;
                 while (levelchosen < 1 || levelchosen > MAXLEVEL) {
-                    printf("Invalid Choice\n");
+                    printf("\033[31mInvalid Choice\n\033[0m");
                     printf("Enter the level you wish to play: ");
-                    scanf("%d", &levelchosen);
+                    scanf(" %c", &levelinput);
+                    levelchosen = levelinput - 48;
                 }
             }
         }
@@ -296,17 +299,17 @@ void startgame(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2
         else {
             levelchosen = player->level;
         }
-        if (playing) {
+        if (playing == '1') {
             preparelevel(levelchosen, maze, playerstart, player);
             playlevel(maze[0], key, key_color, player, custom, levelchosen);
             savedata(*player);
         }
-        if (custom == 0 && playing) {
-            printf("\n\nWould you like to keep playing?\nEnter 1 for yes, or 0 for no: ");
-            scanf("%d", &playing);
+        if (custom == 0 && playing == '1') {
+            printf("\n\nWould you like to keep playing?\nEnter \033[32m1\033[0m for yes, or \033[31m0\033[0m for no: ");
+            scanf(" %c", &playing);
         }
         else {
-            playing = 0;
+            playing = '0';
         }
     }
 }
@@ -351,7 +354,7 @@ void playlevel(int maze[MAXROWS][MAXCOLS], char key[], int key_color[], struct d
             if (custom == 0) {
                 player->deaths++;
             }
-            printf("\t\t\t\t\t    \033[31m You Died! \n");
+            printf("\t\t\t\t\t    \033[31m You Lost! \n");
             printf("---------------|Player: %s |-------------|Level: %d |---------------|Deaths: %d |-----------------\033[0m\n", player->name, levelplayed, player->deaths);
         return;
     }
@@ -483,9 +486,9 @@ void custominstructions(int key_color[]) {
     printf("TIP: Arrange your map into a square or rectangle\n");
     printf("\nDo you wish to have an explanation of how each space works?\n");
     printf("Enter 1 for yes, enter 0 for no: ");
-    int choice;
-    scanf("%d", &choice);
-    if (choice == 1) {
+    char choice;
+    scanf(" %c", &choice);
+    if (choice != '0') {
         printf("\nEmpty space(0): The player can freely move into this space from any orthogonal adjacent space\n");
         printf("\033[3%dmWall(1): This space cannot be entered by the player\n\033[0m", key_color[1]);
         printf("\033[3%dmGoal(2): This is the space the player must move to in order to win the level\n\033[0m", key_color[2]);
@@ -497,8 +500,8 @@ void custominstructions(int key_color[]) {
     }
     printf("\nWould you like to see an example of how to format your text file for your custom map?\n");
     printf("Enter 1 for yes, enter 0 for no: ");
-    scanf("%d", &choice);
-    if (choice == 1) {
+    scanf(" %c", &choice);
+    if (choice != '0') {
         printf("\n5 5 1 2\n");
         printf("1 0 3 4 1\n");
         printf("1 1 1 0 1\n");
