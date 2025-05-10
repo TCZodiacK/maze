@@ -299,11 +299,13 @@ void startgame(int maze[MAXLEVEL][MAXROWS][MAXCOLS], int playerstart[MAXLEVEL][2
             printf("\n\n\t\t\t\t\t\033[32mYou have already beaten the game!\n\033[0m");
             printf("\n\t\t\t\t\tEnter the level you wish to play: ");
             scanf(" %c", &levelinput);
+            //this looks cursed but it just converts the character for a digit to an integer based off it's ascii value
             levelchosen = levelinput - 48;
             while (levelchosen < 1 || levelchosen > MAXLEVEL) {
                 printf("\n\t\t\t\t\t\033[31mInvalid Choice\n\033[0m");
                 printf("\n\t\t\t\t\tEnter the level you wish to play: ");
                 scanf(" %c", &levelinput);
+                //this looks cursed but it just converts the character for a digit to an integer based off it's ascii value
                 levelchosen = levelinput - 48;
             }
         }
