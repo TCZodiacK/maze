@@ -68,7 +68,7 @@ int main(void) {
     char menuchoice = '0';
 
     while (menuchoice != '7') {
-        printf("\t\t\t\t\t     \033[33mMaze Quest!\n\n");
+        printf("\n\t\t\t\t\t     \033[33mMaze Quest!\n\n");
         printf("\t\t\t\t\t  1. New Game\n");
         printf("\t\t\t\t\t  2. Continue\n");
         printf("\t\t\t\t\t  3. Play Custom Map\n");
